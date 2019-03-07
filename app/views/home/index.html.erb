@@ -1,0 +1,59 @@
+<style>
+#cal-heatmap,  #domainDynamicDimension-previous,  #domainDynamicDimension-next{
+  float: left
+}
+
+ #domainDynamicDimension-previous,  #domainDynamicDimension-next {
+   margin: 50px 10px;
+ }
+.calendar-heatmap__block {
+  display: inline-block;
+}
+
+</style>
+<h1>Bolsonaro Tweets - Arquivo</h1>
+<p>Objetivo: Monitorar e analisar os tweets publicados pelo atual presidente Jair Bolsonaro garantindo que o histórico de comunicação não seja removido/alterado e trazendo mais visibilidade para população de como e quando o presidente se comunica garantido os direitos adiquiridos pela Lei de Acesso a Informação </p>
+
+<h2>Tweets por dia</h2>
+<div class="calendar-heatmap__block">
+  <button class="btn" id="domainDynamicDimension-previous">Voltar</button>
+  <div id="cal-heatmap"></div>
+  <button class="btn" id="domainDynamicDimension-next">Avançar</button>
+</div>
+
+<div class="hashtags-ranking__block">
+  <h2>Hashtags mais utilizadas</h2>
+
+  <ol>
+    <% @hashtags.each do |tag| %>
+      <li><%= tag[0]%> - <%= tag[1] %></li>
+    <% end %>
+  </ol>
+</div>
+
+<div class="metions-ranking__block">
+  <h2>Menções mais utilizadas</h2>
+
+  <ol>
+    <% @mentions.each do |tag| %>
+      <li><%= tag[0]%> - <%= tag[1] %></li>
+    <% end %>
+  </ol>
+</div>
+<script type="text/javascript">
+	var cal = new CalHeatMap();
+	cal.init({
+    data: <%= raw @calendar_heatmap.to_json %>,
+    range: 3,
+    itemName: ["tweet", "tweets"],
+    rowLimit: 7,
+    domain: "month",
+    subDomain: "x_day",
+    domainLabelFormat: "%m-%Y",
+    cellSize: 30,
+    start: new Date(2019, 0), // January, 1st 2000
+    nextSelector: "#domainDynamicDimension-next",
+    previousSelector: "#domainDynamicDimension-previous"
+  });
+</script>
+<a href="https://github.com/fbbergamo/tweet-archive"> <3 Github</a>

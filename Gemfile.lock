@@ -1,5 +1,6 @@
-PATH
-  remote: ../twitter
+GIT
+  remote: https://github.com/fbbergamo/twitter.git
+  revision: f449e9e16c97351e777069d8f231681a26e53c23
   specs:
     twitter (6.2.0)
       addressable (~> 2.3)

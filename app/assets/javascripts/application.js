@@ -10,7 +10,9 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require d3/d3
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
+//= require cal-heatmap
 //= require_tree .
