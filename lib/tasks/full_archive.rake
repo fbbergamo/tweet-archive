@@ -8,4 +8,13 @@ namespace :tweet_archive do
       Tweet.persist(tweet)
     end
   end
+
+
+  desc "Load bk"
+  task :load_bk => :environment do
+    jsons = File.read("db/jairbolsonaro.json")
+
+    j = jsons.split("\n").map{ |x| Tweet.persist(  Twitter::Tweet.new(JSON.parse(x).symbolize_keys)) }
+
+  end
 end
