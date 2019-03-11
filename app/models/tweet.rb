@@ -33,4 +33,14 @@ class Tweet < ApplicationRecord
   def api_object
     @api_object ||= Twitter::Tweet.new(raw.symbolize_keys)
   end
+
+  def text
+    raw['retweeted_status'].present? ? check_extend_tweet(raw['retweeted_status']) : check_extend_tweet(raw)
+  end
+
+  private
+
+  def check_extend_tweet(obj)
+    obj['extended_tweet'].present? ? obj['extended_tweet']['full_text'] : obj['text']
+  end
 end
