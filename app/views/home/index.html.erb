@@ -45,6 +45,7 @@
 	cal.init({
     data: <%= raw @calendar_heatmap.to_json %>,
     range: 3,
+    legend: [5,10,15,20,25],
     itemName: ["tweet", "tweets"],
     rowLimit: 7,
     domain: "month",
