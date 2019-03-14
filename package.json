@@ -2,6 +2,7 @@
   "name": "tweet-archive",
   "private": true,
   "dependencies": {
+    "billboard.js": "^1.7.1",
     "cal-heatmap": "^3.6.2",
     "d3": "^3.5.6"
   }

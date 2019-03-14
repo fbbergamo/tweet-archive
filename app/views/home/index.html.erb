@@ -9,11 +9,10 @@
 .calendar-heatmap__block {
   display: inline-block;
 }
-
 </style>
-<h1>Bolsonaro Tweets - Arquivo</h1>
+<h1>Bolsonaro Tweets - Arquivo - <%= Tweet.count %> Tweets </h1>
 <p>Objetivo: Monitorar e analisar os tweets publicados pelo atual presidente Jair Bolsonaro garantindo que o histórico de comunicação não seja removido/alterado e trazendo mais visibilidade para população de como e quando o presidente se comunica garantido os direitos adiquiridos pela Lei de Acesso a Informação </p>
-
+<p>Todos os gráficos estão desconsiderando os retweets</p>
 <h2>Tweets por dia</h2>
 <div class="calendar-heatmap__block">
   <button class="btn" id="domainDynamicDimension-previous">Voltar</button>
@@ -21,26 +20,49 @@
   <button class="btn" id="domainDynamicDimension-next">Avançar</button>
 </div>
 
-<div class="hashtags-ranking__block">
-  <h2>Hashtags mais utilizadas</h2>
+<h2>Palavras mais utilizadas</h2>
+<div id="words_any"></div>
+
+<h2>Verbos mais utilizadas</h2>
+<div id="words_verb"></div>
+
+<h2>Adjetivos mais utilizadas</h2>
+<div id="words_adj"></div>
+
+<div class="metions-ranking__block">
+  <h2>Análise de sentimentos</h2>
 
   <ol>
-    <% @hashtags.each do |tag| %>
+    <% @sentimental_ranking.each do |tag| %>
       <li><%= tag[0]%> - <%= tag[1] %></li>
     <% end %>
   </ol>
 </div>
 
+<h2>Análise de sentimentos por dia</h2>
+<div id="sentimental_per_day"></div>
+
 <div class="metions-ranking__block">
   <h2>Menções mais utilizadas</h2>
-
   <ol>
     <% @mentions.each do |tag| %>
       <li><%= tag[0]%> - <%= tag[1] %></li>
     <% end %>
   </ol>
 </div>
+
+<div class="metions-ranking__block">
+  <h2>Ranking Retweets</h2>
+  <ol>
+    <% @reteweet_ranking.each do |tag| %>
+      <li><%= tag[0]%> - <%= tag[1] %></li>
+    <% end %>
+  </ol>
+</div>
+
+
 <script type="text/javascript">
+
 	var cal = new CalHeatMap();
 	cal.init({
     data: <%= raw @calendar_heatmap.to_json %>,
@@ -56,5 +78,104 @@
     nextSelector: "#domainDynamicDimension-next",
     previousSelector: "#domainDynamicDimension-previous"
   });
+
+  // Script
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+  	["x", <%= raw @words.map{|x| x['text'].inspect }.join(',')%>],
+  	["Palavra", <%= raw @words.map{|x| x['count'] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#words_any"
+  });
+
+
+  // Script
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @words_adj.map{|x| x['text'].inspect }.join(',')%>],
+    ["Palavra", <%= raw @words_adj.map{|x| x['count'] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#words_adj"
+  });
+
+
+// Script
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @words_verb.map{|x| x['text'].inspect }.join(',')%>],
+    ["Palavra", <%= raw @words_verb.map{|x| x['count'] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#words_verb"
+  });
+
+
+  // Script
+var chart = bb.generate({
+  data: {
+      x: "x",
+      columns: [
+  	     ["x",  <%= raw @sentimental_per_day.map{|x| x[:date].inspect if x[:date].present?  }.compact.join(',') %>],
+    	   ["POSITIVO",  <%= raw @sentimental_per_day.map{|x| x[:count_postive] }.join(',')%>],
+         ["NEUTRAL",  <%= raw @sentimental_per_day.map{|x| x[:count_neutral] }.join(',')%>],
+         ["NEGATIVE",  <%= raw @sentimental_per_day.map{|x| x[:count_negative] }.join(',')%>]
+      ]
+    },
+    axis: {
+      x: {
+        type: "timeseries",
+        tick: {
+          format: "%Y-%m-%d"
+        }
+      }
+    },
+    bindto: "#sentimental_per_day"
+  });
+
 </script>
+
 <a href="https://github.com/fbbergamo/tweet-archive"> <3 Github</a>

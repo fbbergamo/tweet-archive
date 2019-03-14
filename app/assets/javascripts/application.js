@@ -15,4 +15,6 @@
 //= require activestorage
 //= require turbolinks
 //= require cal-heatmap
+//= require d3/d3.min.js
+//= require billboard.js/dist/billboard.pkgd.min.js
 //= require_tree .
