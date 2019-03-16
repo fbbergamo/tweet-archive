@@ -26,17 +26,18 @@ class HomeController < ApplicationController
 
     @sentimental_per_month = Tweet.sentimental_per_month.group_by{ |x| x["month"] }
           .map{ |x|
+            next if x[0].nil?
           count_positive = x[1].select{|x| x['sentiment'] == 'POSITIVE' }&.first&.dig("count") || 0
           count_negative = x[1].select{|x| x['sentiment'] == 'NEGATIVE' }&.first&.dig("count") || 0
           count_neutral = x[1].select{|x| x['sentiment'] == 'NEUTRAL' }&.first&.dig("count") || 0
           {
-            date: x[0],
+            date: Date.parse(x[0]).to_s,
             count_postive: count_positive,
             count_negative: count_negative,
             count_neutral: count_neutral,
-            score: (-1*count_negative + count_positive) / ((count_negative + count_positive).zero? ? 1 : count_negative + count_positive)
+            score: ((-1*count_negative + count_positive) / ((count_negative + count_positive).zero? ? 1 : count_negative + count_positive)).to_f
           }
-        }
+        }.compact
 
   end
 end
