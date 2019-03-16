@@ -41,6 +41,15 @@ class Tweet < ApplicationRecord
       ).to_a
   }
 
+  scope :sentimental_per_month,  ->  (remove_retweets = true)  {
+    ActiveRecord::Base.connection
+      .execute(
+        "SELECT date_trunc('month', to_date((raw ->> 'created_at'), 'Dy Mon DD HH24:MI:SS +0000 YYYY')) as month,  detect_sentiment ->> 'sentiment' as sentiment, count(*) FROM tweets
+         #{remove_retweets ? "WHERE raw ->> 'retweeted_status' IS NULL " : ''}
+        GROUP BY month, sentiment ORDER by month"
+      ).to_a
+  }
+
   scope :sentimental_ranking, -> (remove_retweets = true)  {
     where("#{remove_retweets ? "raw ->> 'retweeted_status' IS NULL" : ''} ")
     .group("detect_sentiment -> 'sentiment'").count

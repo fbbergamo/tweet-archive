@@ -42,6 +42,10 @@
 <h2>Análise de sentimentos por dia</h2>
 <div id="sentimental_per_day"></div>
 
+<h2>Análise de sentimentos por Mês score médio</h2>
+<div id="sentimental_per_month_score"></div>
+
+
 <div class="metions-ranking__block">
   <h2>Menções mais utilizadas</h2>
   <ol>
@@ -173,9 +177,38 @@ var chart = bb.generate({
         }
       }
     },
+  zoom: {
+    enabled: {
+      type: "drag"
+    }
+  },
     bindto: "#sentimental_per_day"
   });
 
+
+  var chart = bb.generate({
+    data: {
+        x: "x",
+        columns: [
+    	     ["x",  <%= raw @sentimental_per_month.map{|x| x[:date].inspect if x[:date].present?  }.compact.join(',') %>],
+      	   ["SCORE",  <%= raw @sentimental_per_month.map{|x| x[:score] }.join(',')%>],
+        ]
+      },
+      axis: {
+        x: {
+          type: "timeseries",
+          tick: {
+            format: "%Y-%m"
+          }
+        }
+      },
+    zoom: {
+      enabled: {
+        type: "drag"
+      }
+    },
+      bindto: "#sentimental_per_month_score"
+    });
 </script>
 
 <a href="https://github.com/fbbergamo/tweet-archive"> <3 Github</a>

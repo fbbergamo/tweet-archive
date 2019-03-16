@@ -11,13 +11,32 @@ class HomeController < ApplicationController
     @sentimental_per_day = Tweet.sentimental_per_day
     @sentimental_per_day = @sentimental_per_day
       .group_by{ |x| x["day"] }
-      .map{ |x| {
+      .map{ |x|
+      count_positive = x[1].select{|x| x['sentiment'] == 'POSITIVE' }&.first&.dig("count") || 0
+      count_negative = x[1].select{|x| x['sentiment'] == 'NEGATIVE' }&.first&.dig("count") || 0
+      count_neutral = x[1].select{|x| x['sentiment'] == 'NEUTRAL' }&.first&.dig("count") || 0
+      {
         date: x[0],
-        count_postive: x[1].select{|x| x['sentiment'] == 'POSITIVE' }&.first&.dig("count") || 0,
-        count_negative: x[1].select{|x| x['sentiment'] == 'NEGATIVE' }&.first&.dig("count") || 0,
-        count_neutral: x[1].select{|x| x['sentiment'] == 'NEUTRAL' }&.first&.dig("count") || 0
+        count_postive: count_positive,
+        count_negative: count_negative,
+        count_neutral: count_neutral,
+        score: (-1*count_negative + count_positive) / ((count_negative + count_positive).zero? ? 1 : count_negative + count_positive)
       }
     }
+
+    @sentimental_per_month = Tweet.sentimental_per_month.group_by{ |x| x["month"] }
+          .map{ |x|
+          count_positive = x[1].select{|x| x['sentiment'] == 'POSITIVE' }&.first&.dig("count") || 0
+          count_negative = x[1].select{|x| x['sentiment'] == 'NEGATIVE' }&.first&.dig("count") || 0
+          count_neutral = x[1].select{|x| x['sentiment'] == 'NEUTRAL' }&.first&.dig("count") || 0
+          {
+            date: x[0],
+            count_postive: count_positive,
+            count_negative: count_negative,
+            count_neutral: count_neutral,
+            score: (-1*count_negative + count_positive) / ((count_negative + count_positive).zero? ? 1 : count_negative + count_positive)
+          }
+        }
 
   end
 end
