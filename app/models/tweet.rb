@@ -17,9 +17,9 @@ class Tweet < ApplicationRecord
     .group("raw #> '{retweeted_status,user,screen_name}'").order("count(id) DESC").limit(20).size.to_a
   }
 
-  scope :calendar_heatmap, -> (remove_retweets = true)  {
+  scope :tweets_per_day, -> (remove_retweets = true)  {
      where("#{remove_retweets ? "raw ->> 'retweeted_status' IS NULL" : ''} ")
-    .group("extract(epoch from to_date((raw ->> 'created_at'), 'Dy Mon DD HH24:MI:SS +0000 YYYY'))").count
+    .group("to_date((raw ->> 'created_at'), 'Dy Mon DD HH24:MI:SS +0000 YYYY')").count
   }
 
   scope :words_ranking, -> (word_klass, remove_retweets = true) {

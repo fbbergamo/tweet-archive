@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   def index
     @hashtags = Tweet.hashtags_ranking
     @mentions = Tweet.mentions_ranking
-    @calendar_heatmap = Tweet.calendar_heatmap
+    @tweets_per_day = Tweet.tweets_per_day
     @words = Tweet.words_ranking("ANY")
     @words_adj = Tweet.words_ranking("ADJ")
     @words_verb = Tweet.words_ranking("VERB")
@@ -35,7 +35,7 @@ class HomeController < ApplicationController
             count_postive: count_positive,
             count_negative: count_negative,
             count_neutral: count_neutral,
-            score: ((-1*count_negative + (count_positive+ count_neutral)).to_f / ((count_negative + count_positive + count_neutral).zero? ? 1 : count_negative + count_positive).to_f)
+            score: ((-1*count_negative + (count_positive + count_neutral)).to_f / ((count_negative + count_positive + count_neutral).zero? ? 1 : count_negative + count_positive  + count_neutral).to_f)
           }
         }.compact
 

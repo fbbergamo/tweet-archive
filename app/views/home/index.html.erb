@@ -20,6 +20,9 @@
   <button class="btn" id="domainDynamicDimension-next">Avançar</button>
 </div>
 
+<h2>Tweets por dia</h2>
+<div id="tweets_per_day"></div>
+
 <h2>Palavras mais utilizadas</h2>
 <div id="words_any"></div>
 
@@ -67,20 +70,45 @@
 
 <script type="text/javascript">
 
-	var cal = new CalHeatMap();
-	cal.init({
-    data: <%= raw @calendar_heatmap.to_json %>,
-    range: 3,
-    legend: [5,10,15,20,25],
-    itemName: ["tweet", "tweets"],
-    rowLimit: 7,
-    domain: "month",
-    subDomain: "x_day",
-    domainLabelFormat: "%m-%Y",
-    cellSize: 30,
-    start: new Date(2019, 0), // January, 1st 2000
-    nextSelector: "#domainDynamicDimension-next",
-    previousSelector: "#domainDynamicDimension-previous"
+	// var cal = new CalHeatMap();
+	// cal.init({
+  //   data: <%= raw @tweets_per_day.to_json %>,
+  //   range: 3,
+  //   legend: [5,10,15,20,25],
+  //   itemName: ["tweet", "tweets"],
+  //   rowLimit: 7,
+  //   domain: "month",
+  //   subDomain: "x_day",
+  //   domainLabelFormat: "%m-%Y",
+  //   cellSize: 30,
+  //   start: new Date(2019, 0), // January, 1st 2000
+  //   nextSelector: "#domainDynamicDimension-next",
+  //   previousSelector: "#domainDynamicDimension-previous"
+  // });
+
+  // Script
+var chart = bb.generate({
+  data: {
+      x: "x",
+      columns: [
+         ["x",  <%= raw @tweets_per_day.map{|x| x[0].to_s.inspect }.join(',') %>],
+         ["QUANTIDADE",  <%= raw @tweets_per_day.map{|x| x[1] }.join(',')%>]
+      ]
+    },
+    axis: {
+      x: {
+        type: "timeseries",
+        tick: {
+          format: "%Y-%m-%d"
+        }
+      }
+    },
+  zoom: {
+    enabled: {
+      type: "drag"
+    }
+  },
+    bindto: "#tweets_per_day"
   });
 
   // Script
