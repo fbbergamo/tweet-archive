@@ -35,7 +35,7 @@ class HomeController < ApplicationController
             count_postive: count_positive,
             count_negative: count_negative,
             count_neutral: count_neutral,
-            score: ((-1*count_negative + count_positive) / ((count_negative + count_positive).zero? ? 1 : count_negative + count_positive)).to_f
+            score: ((-1*count_negative + count_positive).to_f / ((count_negative + count_positive).zero? ? 1 : count_negative + count_positive).to_f)
           }
         }.compact
 
