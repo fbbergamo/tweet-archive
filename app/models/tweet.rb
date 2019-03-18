@@ -129,6 +129,21 @@ class Tweet < ApplicationRecord
     .order(" detect_sentiment #> '{sentiment_score,negative}' DESC")
   }
 
+  scope :domains_ranking, -> (remove_retweets = true)  {
+    where("#{remove_retweets ? "raw ->> 'retweeted_status' IS NULL" : ''}")
+    .where("raw #> '{entities,urls}' <> '[]'")
+    .map{|t| t.raw["entities"]["urls"].map{|u| u["expanded_url"] } }
+    .flatten.compact
+    .map{|x| get_host_without_www(x)}.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }.sort_by {|k, v| -v}
+  }
+
+  def self.get_host_without_www(url)
+    url = "http://#{url}" unless url.start_with?('http')
+    uri = URI.parse(url)
+    host = uri.host.downcase
+    host.start_with?('www.') ? host[4..-1] : host
+  end
+
   def self.persist(tweet_api)
     begin
       tweet = self.find_or_create_by(tweet_id: tweet_api.id) do |t|

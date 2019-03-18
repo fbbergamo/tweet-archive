@@ -133,6 +133,15 @@
 
 
 
+<div class="metions-ranking__block">
+  <h2>Domains mais linkados</h2>
+  <ol>
+    <% @domains_ranking.each do |tag| %>
+      <li><%= strip_tags(tag[0]) %> - <%= tag[1] %></li>
+    <% end %>
+  </ol>
+</div>
+
 
 <script type="text/javascript">
 

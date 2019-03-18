@@ -8,7 +8,7 @@ class HomeController < ApplicationController
     @entities_place_ranking = Tweet.entities_ranking("LOCATION")
     @entities_organization_ranking = Tweet.entities_ranking("ORGANIZATION")
     @entities_event_ranking = Tweet.entities_ranking("EVENT")
-
+    @domains_ranking = Tweet.domains_ranking[0..19]
     @day_of_week_ranking = Tweet.day_of_week_ranking.transform_keys{|x| Date::DAYNAMES[x.to_i] }
     @reply_ranking = Tweet.reply_ranking
     @place_ranking = Tweet.place_ranking
