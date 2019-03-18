@@ -59,8 +59,8 @@
   </ol>
 </div>
 
-<h2>Análise de sentimentos por dia</h2>
-<div id="sentimental_per_day"></div>
+<h2>Análise de sentimentos por mês</h2>
+<div id="sentimental_per_month"></div>
 
 <h2>Análise de sentimentos por Mês score médio</h2>
 <div id="sentimental_per_month_score"></div>
@@ -298,10 +298,10 @@ var chart = bb.generate({
   data: {
       x: "x",
       columns: [
-  	     ["x",  <%= raw @sentimental_per_day.map{|x| x[:date].inspect if x[:date].present?  }.compact.join(',') %>],
-    	   ["POSITIVO",  <%= raw @sentimental_per_day.map{|x| x[:count_postive] }.join(',')%>],
-         ["NEUTRAL",  <%= raw @sentimental_per_day.map{|x| x[:count_neutral] }.join(',')%>],
-         ["NEGATIVE",  <%= raw @sentimental_per_day.map{|x| x[:count_negative] }.join(',')%>]
+  	     ["x",  <%= raw @sentimental_per_month.map{|x| x[:date].inspect if x[:date].present?  }.compact.join(',') %>],
+    	   ["POSITIVO",  <%= raw @sentimental_per_month.map{|x| x[:count_postive] }.join(',')%>],
+         ["NEUTRAL",  <%= raw @sentimental_per_month.map{|x| x[:count_neutral] }.join(',')%>],
+         ["NEGATIVE",  <%= raw @sentimental_per_month.map{|x| x[:count_negative] }.join(',')%>]
       ]
     },
     axis: {
@@ -317,7 +317,7 @@ var chart = bb.generate({
       type: "drag"
     }
   },
-    bindto: "#sentimental_per_day"
+    bindto: "#sentimental_per_month"
   });
 
   var chart = bb.generate({
