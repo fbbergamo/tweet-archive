@@ -20,8 +20,22 @@
   <button class="btn" id="domainDynamicDimension-next">Avançar</button>
 </div>
 
-<h2>Tweets por dia</h2>
-<div id="tweets_per_day"></div>
+<h2>Tweets por mês</h2>
+<div id="tweets_per_month"></div>
+
+<h2>Interações por mês</h2>
+<div id="sums_per_month"></div>
+
+<h2>Tipo de midia</h2>
+<div id="media_per_month"></div>
+
+<h2>Tweets por horario</h2>
+<div id="hours_ranking"></div>
+
+<h2>Tweets por dia da semana</h2>
+<div id="day_of_week_ranking"></div>
+
+
 
 <h2>Palavras mais utilizadas</h2>
 <div id="words_any"></div>
@@ -31,6 +45,9 @@
 
 <h2>Adjetivos mais utilizadas</h2>
 <div id="words_adj"></div>
+
+<h2>Contextos mais utilizadas</h2>
+<div id="entities_ranking"></div>
 
 <div class="metions-ranking__block">
   <h2>Análise de sentimentos</h2>
@@ -67,32 +84,61 @@
   </ol>
 </div>
 
+<div class="metions-ranking__block">
+  <h2>Ranking Reply</h2>
+  <ol>
+    <% @reply_ranking.each do |tag| %>
+      <li><%= tag[0]%> - <%= tag[1] %></li>
+    <% end %>
+  </ol>
+</div>
+
+<div class="metions-ranking__block">
+  <h2>Ranking Place</h2>
+  <ol>
+    <% @place_ranking.each do |tag| %>
+      <li><%= tag[0]%> - <%= tag[1] %></li>
+    <% end %>
+  </ol>
+</div>
+
+<div class="metions-ranking__block">
+  <h2>Ranking Dispositivo</h2>
+  <ol>
+    <% @source_ranking.each do |tag| %>
+      <li><%= strip_tags(tag[0]) %> - <%= tag[1] %></li>
+    <% end %>
+  </ol>
+</div>
+
+
+
 
 <script type="text/javascript">
 
-	// var cal = new CalHeatMap();
-	// cal.init({
-  //   data: <%= raw @tweets_per_day.to_json %>,
-  //   range: 3,
-  //   legend: [5,10,15,20,25],
-  //   itemName: ["tweet", "tweets"],
-  //   rowLimit: 7,
-  //   domain: "month",
-  //   subDomain: "x_day",
-  //   domainLabelFormat: "%m-%Y",
-  //   cellSize: 30,
-  //   start: new Date(2019, 0), // January, 1st 2000
-  //   nextSelector: "#domainDynamicDimension-next",
-  //   previousSelector: "#domainDynamicDimension-previous"
-  // });
+	var cal = new CalHeatMap();
+	cal.init({
+    data: <%= raw @tweets_per_day.transform_keys{|x| x.to_time.to_f if x.present?}.select{|x| x.present? }.to_json %>,
+    range: 3,
+    legend: [5,10,15,20,25],
+    itemName: ["tweet", "tweets"],
+    rowLimit: 7,
+    domain: "month",
+    subDomain: "x_day",
+    domainLabelFormat: "%m-%Y",
+    cellSize: 30,
+    start: new Date(2019, 0), // January, 1st 2000
+    nextSelector: "#domainDynamicDimension-next",
+    previousSelector: "#domainDynamicDimension-previous"
+  });
 
   // Script
 var chart = bb.generate({
   data: {
       x: "x",
       columns: [
-         ["x",  <%= raw @tweets_per_day.map{|x| x[0].to_s.inspect }.join(',') %>],
-         ["QUANTIDADE",  <%= raw @tweets_per_day.map{|x| x[1] }.join(',')%>]
+         ["x",  <%= raw @tweets_per_month.map{|x|  x[0].to_date.to_s.inspect if x[0].present? }.compact.join(',') %>],
+         ["QUANTIDADE",  <%= raw @tweets_per_month.map{|x| x[1] }.join(',')%>]
       ]
     },
     axis: {
@@ -108,7 +154,44 @@ var chart = bb.generate({
       type: "drag"
     }
   },
-    bindto: "#tweets_per_day"
+    bindto: "#tweets_per_month"
+  });
+
+  // Script
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @hours_ranking.map{|x| x[0].inspect }.join(',')%>],
+    ["Tweets", <%= raw @hours_ranking.map{|x| x[1] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    bindto: "#hours_ranking"
+  });
+
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @day_of_week_ranking.map{|x| x[0].inspect }.join(',')%>],
+    ["Tweets", <%= raw @day_of_week_ranking.map{|x| x[1] }.join(',')%>]
+      ],
+      type: "bar"
+
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#day_of_week_ranking"
   });
 
   // Script
@@ -158,6 +241,30 @@ var chart = bb.generate({
       }
     },
     bindto: "#words_adj"
+  });
+
+  // Script
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @entities_ranking.map{|x| x['text'].inspect }.join(',')%>],
+    ["Palavra", <%= raw @entities_ranking.map{|x| x['count'] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#entities_ranking"
   });
 
 
@@ -212,6 +319,58 @@ var chart = bb.generate({
   },
     bindto: "#sentimental_per_day"
   });
+
+  var chart = bb.generate({
+    data: {
+        x: "x",
+        columns: [
+    	     ["x",  <%= raw @sums_per_month.map{|x| Date.parse(x["month"]).to_s.inspect if x["month"].present?  }.compact.join(',') %>],
+      	   ["retweets",  <%= raw @sums_per_month.map{|x| x["retweet_count"] }.join(',')%>],
+           ["replies",  <%= raw @sums_per_month.map{|x| x["reply_count"] }.join(',')%>],
+           ["favorites",  <%= raw @sums_per_month.map{|x| x["favorite_count"] }.join(',')%>]
+        ]
+      },
+      axis: {
+        x: {
+          type: "timeseries",
+          tick: {
+            format: "%Y-%m-%d"
+          }
+        }
+      },
+    zoom: {
+      enabled: {
+        type: "drag"
+      }
+    },
+      bindto: "#sums_per_month"
+    });
+
+
+    var chart = bb.generate({
+      data: {
+          x: "x",
+          columns: [
+             ["x",  <%= raw @media_per_month.map{|x| x[:date].inspect if x[:date].present?  }.compact.join(',') %>],
+             ["Video",  <%= raw @media_per_month.map{|x| x[:count_video] }.join(',')%>],
+             ["Fotos",  <%= raw @media_per_month.map{|x| x[:count_photo] }.join(',')%>]
+          ]
+        },
+        axis: {
+          x: {
+            type: "timeseries",
+            tick: {
+              format: "%Y-%m-%d"
+            }
+          }
+        },
+      zoom: {
+        enabled: {
+          type: "drag"
+        }
+      },
+        bindto: "#media_per_month"
+      });
 
 
   var chart = bb.generate({
