@@ -226,5 +226,7 @@ module StopWords
               q
               .
               -
+              r
+              ,
           )
 end

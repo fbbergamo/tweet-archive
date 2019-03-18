@@ -20,6 +20,9 @@ class HomeController < ApplicationController
     @words = Tweet.words_ranking("ANY")
     @words_adj = Tweet.words_ranking("ADJ")
     @words_verb = Tweet.words_ranking("VERB")
+    @words_adv = Tweet.words_ranking("ADV")
+    @words_noun = Tweet.words_ranking("NOUN")
+
     @reteweet_ranking = Tweet.reteweet_ranking
     @sentimental_ranking = Tweet.sentimental_ranking
 

@@ -46,6 +46,12 @@
 <h2>Adjetivos mais utilizadas</h2>
 <div id="words_adj"></div>
 
+<h2>Adverbios mais utilizadas</h2>
+<div id="words_adv"></div>
+
+<h2>Substantivos mais utilizadas</h2>
+<div id="words_noun"></div>
+
 <h2>Entidades mais menciondas</h2>
 <div id="entities_ranking"></div>
 
@@ -256,6 +262,53 @@ var chart = bb.generate({
     },
     bindto: "#words_adj"
   });
+
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @words_adv.map{|x| x['text'].inspect }.join(',')%>],
+    ["Palavra", <%= raw @words_adv.map{|x| x['count'] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#words_adv"
+  });
+
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @words_noun.map{|x| x['text'].inspect }.join(',')%>],
+    ["Palavra", <%= raw @words_noun.map{|x| x['count'] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#words_noun"
+  });
+
 
   // Script
   var chart = bb.generate({
