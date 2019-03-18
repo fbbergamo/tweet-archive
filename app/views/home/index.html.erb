@@ -46,8 +46,22 @@
 <h2>Adjetivos mais utilizadas</h2>
 <div id="words_adj"></div>
 
-<h2>Contextos mais utilizadas</h2>
+<h2>Entidades mais menciondas</h2>
 <div id="entities_ranking"></div>
+
+
+<h2>Lugares mais menciondas</h2>
+<div id="entities_place_ranking"></div>
+
+<h2>Pessoas mais menciondas</h2>
+<div id="entities_person_ranking"></div>
+
+<h2>Organizações mais menciondas</h2>
+<div id="entities_organization_ranking"></div>
+
+<h2>Eventos mais menciondas</h2>
+<div id="entities_event_ranking"></div>
+
 
 <div class="metions-ranking__block">
   <h2>Análise de sentimentos</h2>
@@ -266,6 +280,101 @@ var chart = bb.generate({
     },
     bindto: "#entities_ranking"
   });
+
+
+  var chart = bb.generate({
+    data: {
+      x: "x",
+      columns: [
+    ["x", <%= raw @entities_place_ranking.map{|x| x['text'].inspect }.join(',')%>],
+    ["Palavra", <%= raw @entities_place_ranking.map{|x| x['count'] }.join(',')%>]
+      ],
+      type: "bar"
+    },
+    axis: {
+      x: {
+        type: "category",
+        tick: {
+          rotate: 75,
+          multiline: false,
+          tooltip: true
+        },
+        height: 130
+      }
+    },
+    bindto: "#entities_place_ranking"
+  });
+
+
+
+    var chart = bb.generate({
+      data: {
+        x: "x",
+        columns: [
+      ["x", <%= raw @entities_person_ranking.map{|x| x['text'].inspect }.join(',')%>],
+      ["Palavra", <%= raw @entities_person_ranking.map{|x| x['count'] }.join(',')%>]
+        ],
+        type: "bar"
+      },
+      axis: {
+        x: {
+          type: "category",
+          tick: {
+            rotate: 75,
+            multiline: false,
+            tooltip: true
+          },
+          height: 130
+        }
+      },
+      bindto: "#entities_person_ranking"
+    });
+
+    var chart = bb.generate({
+      data: {
+        x: "x",
+        columns: [
+      ["x", <%= raw @entities_organization_ranking.map{|x| x['text'].inspect }.join(',')%>],
+      ["Palavra", <%= raw @entities_organization_ranking.map{|x| x['count'] }.join(',')%>]
+        ],
+        type: "bar"
+      },
+      axis: {
+        x: {
+          type: "category",
+          tick: {
+            rotate: 75,
+            multiline: false,
+            tooltip: true
+          },
+          height: 130
+        }
+      },
+      bindto: "#entities_organization_ranking"
+    });
+
+    var chart = bb.generate({
+      data: {
+        x: "x",
+        columns: [
+      ["x", <%= raw @entities_event_ranking.map{|x| x['text'].inspect }.join(',')%>],
+      ["Palavra", <%= raw @entities_event_ranking.map{|x| x['count'] }.join(',')%>]
+        ],
+        type: "bar"
+      },
+      axis: {
+        x: {
+          type: "category",
+          tick: {
+            rotate: 75,
+            multiline: false,
+            tooltip: true
+          },
+          height: 130
+        }
+      },
+      bindto: "#entities_event_ranking"
+    });
 
 
 // Script
