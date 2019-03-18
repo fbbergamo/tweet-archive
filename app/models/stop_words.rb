@@ -220,5 +220,11 @@ module StopWords
               teria
               teríamos
               teriam
+              d
+              c
+              p
+              q
+              .
+              -
           )
 end
