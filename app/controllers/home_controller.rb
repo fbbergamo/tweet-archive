@@ -1,12 +1,13 @@
 class HomeController < ApplicationController
+  caches_action :index
 
   def index
     remove_retweets = params[:retweets].present? ? false : true
     @sums_per_month = Tweet.sums_per_month(remove_retweets)
-    
+
     @hours_ranking = Tweet.hours_ranking(remove_retweets)
     @reteweet_ranking = Tweet.reteweet_ranking
-    @entities_ranking = Tweet.entities_ranking(remove_retweets)
+    @entities_ranking = Tweet.entities_ranking("ANY", remove_retweets)
     @entities_person_ranking = Tweet.entities_ranking("PERSON",remove_retweets)
     @entities_place_ranking = Tweet.entities_ranking("LOCATION",remove_retweets)
     @entities_organization_ranking = Tweet.entities_ranking("ORGANIZATION",remove_retweets)
