@@ -64,3 +64,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'twitter', github: 'fbbergamo/twitter'
 gem 'aws-sdk-comprehend'
 gem 'actionpack-action_caching'
+gem 'heroku-deflater', :group => :production
