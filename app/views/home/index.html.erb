@@ -143,8 +143,12 @@
 </div>
 
 
-<script type="text/javascript">
+<a href="https://github.com/fbbergamo/tweet-archive"> <3 Github</a>
+<a href="https://twitter.com/felipebbergamo"> <3 Twitter</a>
+<a href="https://s3-sa-east-1.amazonaws.com/tweets-archive-dump/dump.json.gz" target="blank">Dump Tweets</a>
 
+
+<script type="text/javascript">
 	var cal = new CalHeatMap();
 	cal.init({
     data: <%= raw @tweets_per_day.transform_keys{|x| x.to_time.to_f if x.present?}.select{|x| x.present? }.to_json %>,
@@ -568,5 +572,3 @@ var chart = bb.generate({
       bindto: "#sentimental_per_month_score"
     });
 </script>
-
-<a href="https://github.com/fbbergamo/tweet-archive"> <3 Github</a>
