@@ -10,6 +10,8 @@
   display: inline-block;
 }
 </style>
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+
 <h1>Bolsonaro Tweets - Arquivo - <%= Tweet.count %> Tweets </h1>
 <p>Objetivo: Monitorar e analisar os tweets publicados pelo atual presidente Jair Bolsonaro garantindo que o histórico de comunicação não seja removido/alterado e trazendo mais visibilidade para população de como e quando o presidente se comunica garantindo os direitos adiquiridos pela Lei de Acesso à Informação - <a href="http://www.planalto.gov.br/ccivil_03/_ato2011-2014/2012/Decreto/D7724.htm">Lei nº 12.527/2011</a></p>
 <p>Todos os gráficos estão desconsiderando os retweets</p>
@@ -19,6 +21,8 @@
   <div id="cal-heatmap"></div>
   <button class="btn" id="domainDynamicDimension-next">Avançar</button>
 </div>
+<div id="my_dataviz"></div>
+
 
 <h2>Tweets por mês</h2>
 <div id="tweets_per_month"></div>
@@ -571,4 +575,51 @@ var chart = bb.generate({
     },
       bindto: "#sentimental_per_month_score"
     });
+
+// List of words
+var myWords =  <%= raw @words.map{|x| { text: x['text'], size: (x['count'] * 10).to_s } }.to_json %>;
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 10, bottom: 10, left: 10},
+    width = 450 - margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Constructs a new cloud layout instance. It run an algorythm to find the position of words that suits your requirements
+// Wordcloud features that are different from one word to the other must be here
+var layout = d3.layout.cloud()
+  .size([width, height])
+  .words(myWords.map(function(d) { return {text: d.text, size:d.size}; }))
+  .padding(5)        //space sbetween words
+  .rotate(function() { return ~~(Math.random() * 2) * 90; })
+  .fontSize(function(d) { return d.size; })      // font size of words
+  .on("end", draw);
+layout.start();
+
+// This function takes the output of 'layout' above and draw the words
+// Wordcloud features that are THE SAME from one word to the other can be here
+function draw(words) {
+  svg
+    .append("g")
+      .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+      .selectAll("text")
+        .data(words)
+      .enter().append("text")
+        .style("font-size", function(d) { return d.size; })
+        .style("fill", "#69b3a2")
+        .attr("text-anchor", "middle")
+        .style("font-family", "Impact")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+}
+
 </script>
