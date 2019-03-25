@@ -577,7 +577,7 @@ var chart = bb.generate({
     });
 
 // List of words
-var myWords =  <%= raw @words.map{|x| { text: x['text'], size: (x['count']).to_s } }.to_json %>;
+var myWords =  <%= raw @words.map{|x| { text: x['text'], size: (x['count'] / 10).to_s } }.to_json %>;
 
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 10, bottom: 10, left: 10},
